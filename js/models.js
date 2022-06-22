@@ -83,7 +83,14 @@ class StoryList {
 
   async deleteStory(user, storyId) {
     console.debug("deleteStory");
-    const res = await axios.delete(`https://hack-or-snooze-v3.herokuapp.com/stories/${storyId}`, { token: user.loginToken })
+    // const res = await axios.delete(`https://hack-or-snooze-v3.herokuapp.com/stories/${storyId}`, { token: user.loginToken })
+    const res = await axios({
+      url: `${BASE_URL}/stories/${storyId}`,
+      method: "DELETE",
+      data: {
+        token: user.loginToken
+      },
+    });
     console.log(res)
   }
 }
@@ -213,7 +220,16 @@ class User {
     const favoriteStoryIndex = this.favorites.findIndex(s => s.storyId === story.storyId);
     console.log(favoriteStoryIndex)
     this.favorites.splice(favoriteStoryIndex, 1);
-    const res = await axios.delete(`https://hack-or-snooze-v3.herokuapp.com/users/${this.username}/favorites/${story.storyId}`, { token: this.loginToken })
+    //const res = await axios.delete(`https://hack-or-snooze-v3.herokuapp.com/users/${this.username}/favorites/${story.storyId}`, { token: this.loginToken })
+
+    const res = await axios({
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+      method: "DELETE",
+      data: {
+        token: this.loginToken
+      },
+    });
+
     console.log(res)
   }
   isFavorite(story) {

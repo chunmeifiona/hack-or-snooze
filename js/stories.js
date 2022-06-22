@@ -27,8 +27,8 @@ function generateStoryMarkup(story) {
   if (!currentUser.isFavorite(story)) {
     checked = "";
   }
-  console.log(currentUser.isFavorite(story));
-  console.log(story.title, checked)
+  //console.log(currentUser.isFavorite(story));
+  //console.log(story.title, checked)
 
   return $(`
       <li id="${story.storyId}"> 
