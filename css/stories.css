@@ -4,7 +4,7 @@
   margin: 20px 5px;
 }
 
-.stories-list > li {
+.stories-list>li {
   color: gray;
   font-size: 0.8rem;
   margin: 10px 0;
@@ -36,4 +36,21 @@
 
 .story-user {
   display: block;
+}
+
+.star {
+  visibility: hidden;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.star:before {
+  content: "\2606";
+  position: absolute;
+  visibility: visible;
+}
+
+.star:checked:before {
+  content: "\2605";
+  position: absolute;
 }

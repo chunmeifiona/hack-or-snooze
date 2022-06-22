@@ -14,6 +14,22 @@ function navAllStories(evt) {
 
 $body.on("click", "#nav-all", navAllStories);
 
+/*Show submit form when click navbar link*///fiona
+function navSubmitNewStory(evt) {
+  console.log("navSubmitNewStory");
+  hidePageComponents();
+  $newstoryForm.show();
+}
+$navSubmitStory.on("click", navSubmitNewStory)
+
+/**Show favorites when click navbar link *///fiona
+function favoriteStories(evt) {
+  console.debug("favoriteStories", evt);
+  hidePageComponents();
+  putFavoriteStoriesOnPage();
+}
+$("#nav-favorites").on("click", favoriteStories)
+
 /** Show login/signup on click on "login" */
 
 function navLoginClick(evt) {
@@ -33,4 +49,5 @@ function updateNavOnLogin() {
   $navLogin.hide();
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
+  $navbarMenu.show();//fiona
 }

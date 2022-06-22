@@ -113,4 +113,6 @@ function updateUIOnUserLogin() {
   $allStoriesList.show();
 
   updateNavOnLogin();
+  $(".star").show(); //fiona when login, show the srat for check favorite
+  $(".deleteStory").show();
 }
