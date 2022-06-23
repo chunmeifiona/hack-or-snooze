@@ -18,6 +18,7 @@ $body.on("click", "#nav-all", navAllStories);
 function navSubmitNewStory(evt) {
   console.log("navSubmitNewStory");
   hidePageComponents();
+  $allStoriesList.show();
   $newstoryForm.show();
 }
 $navSubmitStory.on("click", navSubmitNewStory)
@@ -29,6 +30,14 @@ function favoriteStories(evt) {
   putFavoriteStoriesOnPage();
 }
 $("#nav-favorites").on("click", favoriteStories)
+
+/**Show mystory when click navbar link *///fiona
+function myStories(evt) {
+  console.debug("myStories", evt);
+  hidePageComponents();
+  putMyStoriesOnPage();
+}
+$("#nav-mystories").on("click", myStories)
 
 /** Show login/signup on click on "login" */
 

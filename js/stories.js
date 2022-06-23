@@ -23,9 +23,9 @@ function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
-  let checked = "checked";
-  if (!currentUser.isFavorite(story)) {
-    checked = "";
+  let checked = "";
+  if (currentUser.isFavorite(story)) {
+    checked = "checked";
   }
   //console.log(currentUser.isFavorite(story));
   //console.log(story.title, checked)
@@ -42,21 +42,6 @@ function generateStoryMarkup(story) {
         <small class="story-user">posted by ${story.username}</small>
       </li>
     `);
-  // } else {
-  //   return $(`
-  //   <li id="${story.storyId}"> 
-  //   <input class="star hidden" type="checkbox" id="" title="Add to favorite">
-  //   <button class="deleteStory hidden" type="submit" id="" title="Delete story">x</button>
-  //     <a href="${story.url}" target="a_blank" class="story-link">
-  //       ${story.title}
-  //     </a>
-  //     <small class="story-hostname">(${hostName})</small>
-  //     <small class="story-author">by ${story.author}</small>
-  //     <small class="story-user">posted by ${story.username}</small>
-  //   </li>
-  // `);
-  // }
-
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
@@ -75,7 +60,6 @@ function putStoriesOnPage() {
   $allStoriesList.show();
   if (currentUser) {
     $(".star").show(); //fiona when login, show the srat for check favorite
-    $(".deleteStory").show();
   }
 }
 
@@ -89,8 +73,8 @@ async function submitStoryForm() {
   const storyForm = { title, author, url };
   console.log(storyForm)
   const newStory = await storyList.addStory(currentUser, storyForm);
-  const $story = generateStoryMarkup(newStory);
-  $allStoriesList.append($story);
+  const $story = await generateStoryMarkup(newStory);
+  $allStoriesList.prepend($story);
 
   $newstoryForm.hide();
   $newstoryForm.trigger("reset");
@@ -98,20 +82,13 @@ async function submitStoryForm() {
 $("#newstory-form").on("submit", function (e) {
   e.preventDefault();
   submitStoryForm();
+  // putStoriesOnPage();
 })
-//"c618c874-5dce-4fcd-b4a7-68abf7091a1a"
 
 
-/* when user clicks delete button, 
-the story will be deleted from storylist and let api know its been deleted */
-$allStoriesList.on("click", ".deleteStory", function () {
-  const storyId = $(this).closest("li").attr("id");
-  console.log(currentUser, storyId)
-  storyList.deleteStory(currentUser, storyId);
-})
 
 /* when user clicks star, the story will be added to favorite list.  */
-$allStoriesList.on("click", ".star", toggleStoryFavorite)
+$(".stories-list").on("click", ".star", toggleStoryFavorite)
 
 async function toggleStoryFavorite() {
   console.debug("toggleStoryFavorite");
@@ -125,11 +102,24 @@ async function toggleStoryFavorite() {
 
 }
 //async function 
+async function removeStory(evt) {
+  console.debug("removeStory");
+  const storyId = $(this).closest("li").attr("id");
+  console.log(currentUser, storyId)
+  await storyList.deleteStory(currentUser, storyId);
+  console.log(currentUser)
+  // $(this).closest("li").remove();
+  await putMyStoriesOnPage();
+}
+
+/* when user clicks delete button, 
+the story will be deleted from storylist and let api know its been deleted */
+$("#my-stories-list").on("click", ".deleteStory", removeStory)
+
 
 
 function putFavoriteStoriesOnPage() {
   console.debug("putFavoriteStoriesOnPage");
-
   $("#favorite-stories-list").empty();
 
   // loop through all of our stories and generate HTML for them
@@ -139,4 +129,25 @@ function putFavoriteStoriesOnPage() {
   }
 
   $("#favorite-stories-list").show();
+}
+
+
+function putMyStoriesOnPage() {
+  console.debug("putMyStoriesOnPage");
+  $("#my-stories-list").empty();
+
+
+  if (currentUser.ownStories.length === 0) {
+    $("#my-stories-list").append("<h5>No stories added by user yet!</h5>");
+  } else {
+    // loop through all of our stories and generate HTML for them
+    for (let story of currentUser.ownStories) {
+      const $story = generateStoryMarkup(story);
+      $("#my-stories-list").append($story);
+    }
+  }
+
+  $("#my-stories-list").show();
+  $(".deleteStory").show();
+  $(".star").show(); //fiona when login, show the srat for check favorite
 }

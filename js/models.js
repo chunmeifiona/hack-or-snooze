@@ -78,6 +78,10 @@ class StoryList {
     const res = await axios.post("https://hack-or-snooze-v3.herokuapp.com/stories", { token: user.loginToken, story: { title, author, url } })
     console.log(res.data.story)
     const story = new Story(res.data.story);
+
+    this.stories.unshift(story);
+    user.ownStories.unshift(story);
+
     return story;
   }
 
@@ -92,6 +96,12 @@ class StoryList {
       },
     });
     console.log(res)
+    // filter out the story whose ID we are removing
+    this.stories = this.stories.filter(story => story.storyId !== storyId);
+
+    // do the same thing for the user's list of stories & their favorites
+    user.ownStories = user.ownStories.filter(s => s.storyId !== storyId);
+    user.favorites = user.favorites.filter(s => s.storyId !== storyId);
   }
 }
 
